@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
 import '../models/user_data.dart';
 import 'diet_goal_screen.dart';
 import '../widgets/custom_widgets.dart';
@@ -17,11 +20,48 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
   late UserData _userData;
   final List<String> genders = ['Male', 'Female', 'Other'];
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
     _userData = widget.userData;
+  }
+
+  void _pickImage(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera),
+              title: const Text('Open Camera'),
+              onTap: () async {
+                Navigator.pop(context);
+                final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+                if (image != null) {
+                  File selectedImage = File(image.path);
+                  // Handle selectedImage
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.image),
+              title: const Text('Open Gallery'),
+              onTap: () async {
+                Navigator.pop(context);
+                final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+                if (image != null) {
+                  File selectedImage = File(image.path);
+                  // Handle selectedImage
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -62,10 +102,9 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                             color: Colors.white,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.teal,
-                            size: 24,
+                          child: IconButton(
+                            icon: const Icon(Icons.camera_alt),
+                            onPressed: () => _pickImage(context),
                           ),
                         ),
                       ),
@@ -100,16 +139,22 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                       ),
                       const SizedBox(height: 15),
                       TextFormField(
-                        decoration:
-                        inputDecoration('Age', Icons.calendar_today),
+                        decoration: inputDecoration('Age', Icons.calendar_today),
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your age';
                           }
-                          if (int.tryParse(value) == null) {
+
+                          final int? age = int.tryParse(value);
+                          if (age == null) {
                             return 'Please enter a valid number';
                           }
+
+                          if (age < 0 || age > 110) {
+                            return 'Not valid';
+                          }
+
                           return null;
                         },
                         onSaved: (value) {
@@ -150,16 +195,22 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
-                        decoration:
-                        inputDecoration('Height (cm)', Icons.height),
+                        decoration: inputDecoration('Height (cm)', Icons.height),
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your height';
                           }
-                          if (double.tryParse(value) == null) {
+
+                          final double? height = double.tryParse(value);
+                          if (height == null) {
                             return 'Please enter a valid number';
                           }
+
+                          if (height < 50 || height > 300) {
+                            return 'Not valid';
+                          }
+
                           return null;
                         },
                         onSaved: (value) {
@@ -168,16 +219,22 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                       ),
                       const SizedBox(height: 15),
                       TextFormField(
-                        decoration: inputDecoration(
-                            'Weight (kg)', Icons.monitor_weight),
+                        decoration: inputDecoration('Weight (kg)', Icons.monitor_weight),
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your weight';
                           }
-                          if (double.tryParse(value) == null) {
+
+                          final double? weight = double.tryParse(value);
+                          if (weight == null) {
                             return 'Please enter a valid number';
                           }
+
+                          if (weight < 1 || weight > 300) {
+                            return 'Not valid';
+                          }
+
                           return null;
                         },
                         onSaved: (value) {

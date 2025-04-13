@@ -5,7 +5,15 @@ class MealsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return  Scaffold(
+
+      appBar: AppBar(
+
+        backgroundColor: Colors.teal,
+        title: Text('Meals Page'),
+        centerTitle: true,
+
+      ),
       body: Center(
         child: Text('Meals Page'),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -12,6 +13,19 @@ class DashboardPage extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         actions: [
+
+          IconButton(
+              onPressed: () async {
+                final ImagePicker picker = ImagePicker();
+                final XFile? image =
+                await picker.pickImage(source: ImageSource.camera);
+                if (image != null) {
+                  print("Image Path: ${image.path}");
+                }
+              },
+              icon: const Icon(Icons.camera)),
+
+
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
@@ -19,7 +33,7 @@ class DashboardPage extends StatelessWidget {
               backgroundColor: Colors.white,
               child: CircleAvatar(
                 radius: 16,
-                backgroundImage: const AssetImage('as/images/pic2.jpeg'),
+                backgroundImage: const AssetImage('assets/images/pic2.jpg'),
               ),
             ),
           ),
